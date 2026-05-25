@@ -6,45 +6,53 @@
   <title>할 일 관리 앱</title>
   <style>
     :root {
-      --bg-page: #f0f2f5;
-      --bg-container: #ffffff;
-      --bg-item: #f9fafb;
-      --bg-item-hover: #f1f3f9;
-      --text-primary: #1f2937;
-      --text-heading: #1a1a2e;
-      --text-muted: #6b7280;
-      --text-done: #9ca3af;
-      --border-color: #d1d5db;
-      --shadow: rgba(0, 0, 0, 0.1);
-      --accent: #4f6ef7;
-      --accent-hover: #3a57d6;
+      --bg-page: #eef2ff;
+      --bg-glow-top: rgba(129, 140, 248, 0.34);
+      --bg-glow-bottom: rgba(56, 189, 248, 0.22);
+      --bg-container: rgba(255, 255, 255, 0.9);
+      --bg-item: rgba(255, 255, 255, 0.86);
+      --bg-item-hover: rgba(255, 255, 255, 0.98);
+      --bg-input: rgba(255, 255, 255, 0.84);
+      --text-primary: #1e293b;
+      --text-heading: #0f172a;
+      --text-muted: #64748b;
+      --text-done: #94a3b8;
+      --border-color: rgba(148, 163, 184, 0.28);
+      --shadow: rgba(79, 70, 229, 0.18);
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.14);
+      --accent-hover: #4f46e5;
       --delete-color: #ef4444;
-      --delete-bg-hover: #fee2e2;
-      --btn-text: #374151;
-      --btn-hover-bg: #f3f4f6;
-      --theme-btn-bg: #e5e7eb;
-      --theme-btn-hover: #d1d5db;
+      --delete-bg-hover: rgba(254, 226, 226, 0.9);
+      --btn-text: #334155;
+      --btn-hover-bg: rgba(226, 232, 240, 0.72);
+      --theme-btn-bg: rgba(255, 255, 255, 0.75);
+      --theme-btn-hover: rgba(255, 255, 255, 0.95);
     }
 
     [data-theme="dark"] {
-      --bg-page: #0f172a;
-      --bg-container: #1e293b;
-      --bg-item: #273549;
-      --bg-item-hover: #2f3e55;
+      --bg-page: #020617;
+      --bg-glow-top: rgba(99, 102, 241, 0.24);
+      --bg-glow-bottom: rgba(14, 165, 233, 0.16);
+      --bg-container: rgba(15, 23, 42, 0.82);
+      --bg-item: rgba(30, 41, 59, 0.9);
+      --bg-item-hover: rgba(37, 99, 235, 0.18);
+      --bg-input: rgba(15, 23, 42, 0.72);
       --text-primary: #e2e8f0;
-      --text-heading: #f1f5f9;
+      --text-heading: #f8fafc;
       --text-muted: #94a3b8;
       --text-done: #64748b;
-      --border-color: #334155;
-      --shadow: rgba(0, 0, 0, 0.4);
-      --accent: #6b8cff;
-      --accent-hover: #4f6ef7;
-      --delete-color: #f87171;
-      --delete-bg-hover: #3b1f1f;
-      --btn-text: #cbd5e1;
-      --btn-hover-bg: #273549;
-      --theme-btn-bg: #334155;
-      --theme-btn-hover: #475569;
+      --border-color: rgba(148, 163, 184, 0.18);
+      --shadow: rgba(15, 23, 42, 0.55);
+      --accent: #818cf8;
+      --accent-soft: rgba(129, 140, 248, 0.18);
+      --accent-hover: #6366f1;
+      --delete-color: #fca5a5;
+      --delete-bg-hover: rgba(127, 29, 29, 0.38);
+      --btn-text: #e2e8f0;
+      --btn-hover-bg: rgba(51, 65, 85, 0.8);
+      --theme-btn-bg: rgba(30, 41, 59, 0.85);
+      --theme-btn-hover: rgba(51, 65, 85, 0.95);
     }
 
     *, *::before, *::after {
@@ -54,74 +62,122 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg-page);
+      font-family: 'Inter', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top left, var(--bg-glow-top), transparent 36%),
+        radial-gradient(circle at bottom right, var(--bg-glow-bottom), transparent 30%),
+        var(--bg-page);
       display: flex;
       justify-content: center;
-      padding: 60px 16px;
+      align-items: center;
+      padding: 32px 16px;
       min-height: 100vh;
-      transition: background 0.3s;
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.3s;
     }
 
     .container {
       background: var(--bg-container);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px var(--shadow);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px -28px var(--shadow);
+      backdrop-filter: blur(18px);
       padding: 32px;
       width: 100%;
-      max-width: 480px;
+      max-width: 560px;
       height: fit-content;
-      transition: background 0.3s, box-shadow 0.3s;
+      transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
+      overflow: hidden;
+      animation: panel-enter 0.55s ease both;
     }
 
     .header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-bottom: 24px;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .header-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: clamp(2rem, 4vw, 2.5rem);
       color: var(--text-heading);
-      text-align: center;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 34ch;
       transition: color 0.3s;
     }
 
     .theme-toggle {
-      position: absolute;
-      right: 0;
       background: var(--theme-btn-bg);
-      border: none;
-      border-radius: 20px;
-      padding: 6px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 10px 12px;
       font-size: 1.1rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
       line-height: 1;
+      align-self: flex-start;
     }
 
     .theme-toggle:hover {
       background: var(--theme-btn-hover);
+      transform: translateY(-1px) rotate(-8deg);
     }
 
     .input-area {
       display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 14px;
+      border-radius: 22px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .input-area input {
       flex: 1;
-      padding: 10px 14px;
-      border: 2px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 0.95rem;
+      padding: 14px 16px;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      font-size: 1rem;
       outline: none;
-      background: var(--bg-container);
+      background: transparent;
       color: var(--text-primary);
-      transition: border-color 0.2s, background 0.3s, color 0.3s;
+      transition: border-color 0.2s, background 0.3s, color 0.3s, box-shadow 0.2s;
     }
 
     .input-area input::placeholder {
@@ -130,58 +186,65 @@
 
     .input-area input:focus {
       border-color: var(--accent);
+      background: var(--bg-item);
+      box-shadow: 0 0 0 4px var(--accent-soft);
     }
 
     .input-area button {
-      padding: 10px 18px;
-      background: var(--accent);
+      padding: 0 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
       color: #ffffff;
       border: none;
-      border-radius: 8px;
+      border-radius: 16px;
       font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
       white-space: nowrap;
+      box-shadow: 0 14px 24px -18px var(--accent);
     }
 
     .input-area button:hover {
-      background: var(--accent-hover);
-    }
-
-    .stats {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      transition: color 0.3s;
+      transform: translateY(-1px);
+      box-shadow: 0 18px 26px -18px var(--accent-hover);
     }
 
     #todo-list {
       list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     #todo-list li {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 8px;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 20px;
       background: var(--bg-item);
-      margin-bottom: 8px;
-      transition: background 0.15s;
+      border: 1px solid transparent;
+      box-shadow: 0 18px 32px -28px var(--shadow);
+      transition: background 0.15s, transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      animation: item-enter 0.35s ease both;
     }
 
     #todo-list li:hover {
       background: var(--bg-item-hover);
+      border-color: var(--border-color);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 30px -26px var(--shadow);
     }
 
     #todo-list li.done .todo-text {
       text-decoration: line-through;
       color: var(--text-done);
+      transform: translateY(1px);
     }
 
     #todo-list li input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       accent-color: var(--accent);
       cursor: pointer;
       flex-shrink: 0;
@@ -189,10 +252,11 @@
 
     .todo-text {
       flex: 1;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      line-height: 1.5;
       color: var(--text-primary);
       word-break: break-word;
-      transition: color 0.3s;
+      transition: color 0.3s, transform 0.2s;
     }
 
     .delete-btn {
@@ -201,51 +265,139 @@
       color: var(--delete-color);
       font-size: 1.1rem;
       cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: background 0.15s;
+      padding: 8px;
+      border-radius: 12px;
+      transition: background 0.15s, transform 0.15s;
       flex-shrink: 0;
     }
 
     .delete-btn:hover {
       background: var(--delete-bg-hover);
+      transform: scale(1.04);
     }
 
-    .toolbar {
+    .meta-row {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 12px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .stats {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      transition: color 0.3s, background 0.3s;
+    }
+
+    .stats:empty {
+      display: none;
     }
 
     .complete-all-btn {
-      background: none;
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-item);
       border: 1px solid var(--border-color);
       color: var(--btn-text);
-      font-size: 0.82rem;
-      padding: 5px 12px;
-      border-radius: 6px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s, color 0.3s;
+      transition: background 0.15s, border-color 0.15s, color 0.3s, transform 0.15s;
     }
 
     .complete-all-btn:hover {
       background: var(--btn-hover-bg);
       border-color: var(--text-muted);
+      transform: translateY(-1px);
     }
 
     .empty-state {
       text-align: center;
       color: var(--text-done);
-      font-size: 0.9rem;
-      padding: 24px 0;
+      font-size: 0.95rem;
+      padding: 36px 20px;
+      border: 1px dashed var(--border-color);
+      border-radius: 22px;
+      background: var(--bg-item);
       transition: color 0.3s;
+    }
+
+    @keyframes panel-enter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes item-enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .container {
+        padding: 24px 18px;
+        border-radius: 24px;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .theme-toggle {
+        align-self: flex-end;
+      }
+
+      .input-area {
+        flex-direction: column;
+      }
+
+      .input-area button {
+        min-height: 52px;
+      }
+
+      .meta-row > * {
+        width: 100%;
+      }
+
+      .complete-all-btn {
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>📝 할 일 관리</h1>
+      <div class="header-copy">
+        <p class="eyebrow">Focus Mode</p>
+        <div class="title-group">
+          <h1>오늘의 할 일</h1>
+          <p class="subtitle">중요한 작업을 선명하게 정리하고, 기분 좋게 하나씩 완료해 보세요.</p>
+        </div>
+      </div>
       <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">🌙</button>
     </div>
 
@@ -260,10 +412,10 @@
       <button id="add-btn">추가</button>
     </div>
 
-    <div class="toolbar">
+    <div class="meta-row">
+      <p class="stats" id="stats"></p>
       <button class="complete-all-btn" id="complete-all-btn">모두 완료</button>
     </div>
-    <p class="stats" id="stats"></p>
     <ul id="todo-list"></ul>
     <p class="empty-state" id="empty-state">할 일이 없습니다. 새 항목을 추가해 보세요!</p>
   </div>
