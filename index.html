@@ -5,6 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>할 일 관리 앱</title>
   <style>
+    :root {
+      --bg-page: #f0f2f5;
+      --bg-container: #ffffff;
+      --bg-item: #f9fafb;
+      --bg-item-hover: #f1f3f9;
+      --text-primary: #1f2937;
+      --text-heading: #1a1a2e;
+      --text-muted: #6b7280;
+      --text-done: #9ca3af;
+      --border-color: #d1d5db;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --accent: #4f6ef7;
+      --accent-hover: #3a57d6;
+      --delete-color: #ef4444;
+      --delete-bg-hover: #fee2e2;
+      --btn-text: #374151;
+      --btn-hover-bg: #f3f4f6;
+      --theme-btn-bg: #e5e7eb;
+      --theme-btn-hover: #d1d5db;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0f172a;
+      --bg-container: #1e293b;
+      --bg-item: #273549;
+      --bg-item-hover: #2f3e55;
+      --text-primary: #e2e8f0;
+      --text-heading: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-done: #64748b;
+      --border-color: #334155;
+      --shadow: rgba(0, 0, 0, 0.4);
+      --accent: #6b8cff;
+      --accent-hover: #4f6ef7;
+      --delete-color: #f87171;
+      --delete-bg-hover: #3b1f1f;
+      --btn-text: #cbd5e1;
+      --btn-hover-bg: #273549;
+      --theme-btn-bg: #334155;
+      --theme-btn-hover: #475569;
+    }
+
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -13,28 +55,55 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f2f5;
+      background: var(--bg-page);
       display: flex;
       justify-content: center;
       padding: 60px 16px;
       min-height: 100vh;
+      transition: background 0.3s;
     }
 
     .container {
-      background: #ffffff;
+      background: var(--bg-container);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 20px var(--shadow);
       padding: 32px;
       width: 100%;
       max-width: 480px;
       height: fit-content;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 24px;
     }
 
     h1 {
       font-size: 1.6rem;
-      color: #1a1a2e;
-      margin-bottom: 24px;
+      color: var(--text-heading);
       text-align: center;
+      transition: color 0.3s;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      right: 0;
+      background: var(--theme-btn-bg);
+      border: none;
+      border-radius: 20px;
+      padding: 6px 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+
+    .theme-toggle:hover {
+      background: var(--theme-btn-hover);
     }
 
     .input-area {
@@ -46,20 +115,26 @@
     .input-area input {
       flex: 1;
       padding: 10px 14px;
-      border: 2px solid #d1d5db;
+      border: 2px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s;
+      background: var(--bg-container);
+      color: var(--text-primary);
+      transition: border-color 0.2s, background 0.3s, color 0.3s;
+    }
+
+    .input-area input::placeholder {
+      color: var(--text-muted);
     }
 
     .input-area input:focus {
-      border-color: #4f6ef7;
+      border-color: var(--accent);
     }
 
     .input-area button {
       padding: 10px 18px;
-      background: #4f6ef7;
+      background: var(--accent);
       color: #ffffff;
       border: none;
       border-radius: 8px;
@@ -70,13 +145,14 @@
     }
 
     .input-area button:hover {
-      background: #3a57d6;
+      background: var(--accent-hover);
     }
 
     .stats {
       font-size: 0.85rem;
-      color: #6b7280;
+      color: var(--text-muted);
       margin-bottom: 12px;
+      transition: color 0.3s;
     }
 
     #todo-list {
@@ -89,24 +165,24 @@
       gap: 10px;
       padding: 12px 14px;
       border-radius: 8px;
-      background: #f9fafb;
+      background: var(--bg-item);
       margin-bottom: 8px;
       transition: background 0.15s;
     }
 
     #todo-list li:hover {
-      background: #f1f3f9;
+      background: var(--bg-item-hover);
     }
 
     #todo-list li.done .todo-text {
       text-decoration: line-through;
-      color: #9ca3af;
+      color: var(--text-done);
     }
 
     #todo-list li input[type="checkbox"] {
       width: 18px;
       height: 18px;
-      accent-color: #4f6ef7;
+      accent-color: var(--accent);
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -114,14 +190,15 @@
     .todo-text {
       flex: 1;
       font-size: 0.95rem;
-      color: #1f2937;
+      color: var(--text-primary);
       word-break: break-word;
+      transition: color 0.3s;
     }
 
     .delete-btn {
       background: none;
       border: none;
-      color: #ef4444;
+      color: var(--delete-color);
       font-size: 1.1rem;
       cursor: pointer;
       padding: 4px 6px;
@@ -131,7 +208,7 @@
     }
 
     .delete-btn:hover {
-      background: #fee2e2;
+      background: var(--delete-bg-hover);
     }
 
     .toolbar {
@@ -142,31 +219,35 @@
 
     .complete-all-btn {
       background: none;
-      border: 1px solid #d1d5db;
-      color: #374151;
+      border: 1px solid var(--border-color);
+      color: var(--btn-text);
       font-size: 0.82rem;
       padding: 5px 12px;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
+      transition: background 0.15s, border-color 0.15s, color 0.3s;
     }
 
     .complete-all-btn:hover {
-      background: #f3f4f6;
-      border-color: #9ca3af;
+      background: var(--btn-hover-bg);
+      border-color: var(--text-muted);
     }
 
     .empty-state {
       text-align: center;
-      color: #9ca3af;
+      color: var(--text-done);
       font-size: 0.9rem;
       padding: 24px 0;
+      transition: color 0.3s;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📝 할 일 관리</h1>
+    <div class="header">
+      <h1>📝 할 일 관리</h1>
+      <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">🌙</button>
+    </div>
 
     <div class="input-area">
       <input
@@ -193,6 +274,23 @@
     const todoList = document.getElementById('todo-list');
     const statsEl = document.getElementById('stats');
     const emptyState = document.getElementById('empty-state');
+    const themeToggle = document.getElementById('theme-toggle');
+
+    // Theme management
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
 
     let todos = JSON.parse(localStorage.getItem('todos') || '[]');
 
